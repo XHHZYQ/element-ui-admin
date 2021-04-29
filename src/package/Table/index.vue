@@ -4,8 +4,7 @@
     <el-form :model="formModel" ref="tableSearch">
       <el-row :gutter="24">
 
-      <el-col :span="8" v-for="(item, index) of searchList"
-      :style="{display: index < count ? 'block' : 'none'}">
+      <el-col :span="8" v-for="(item, index) of searchList" :key="item.model" :style="{display: index < count ? 'block' : 'none'}">
 
         <!--input 输入框-->
         <template v-if="item.inputType==='input'">
@@ -14,7 +13,6 @@
             v-if="!item.slot && !item.isHidden"
             :label="item.label"
             :prop="item.model"
-            :key="index"
           >
             <!--type 属性可选为input、textarea等元素属性-->
             <el-input
@@ -37,7 +35,6 @@
             v-if="!item.slot && !item.isHidden"
             :label="item.label"
             :prop="item.model"
-            :key="index"
           >
             <el-select
               @change="e => item.change && item.change(e)"
@@ -59,7 +56,6 @@
             v-if="!item.slot && !item.isHidden"
             :label="item.label"
             :prop="item.model"
-            :key="index"
           >
             <el-cascader
               @change=" e => item.change && item.change(e)"
@@ -80,7 +76,6 @@
             v-if="!item.slot && !item.isHidden"
             :label="item.label"
             :prop="item.model"
-            :key="index"
           >
             <!--type = date/datetime-->
             <el-date-picker
@@ -105,7 +100,6 @@
             v-if="!item.slot && !item.isHidden"
             :label="item.label"
             :prop="item.model"
-            :key="index"
           >
             <!--datetimerange/ daterange-->
             <el-date-picker
@@ -176,6 +170,7 @@
         <template v-for="(item, index) of columns">
           <el-table-column
             v-if="index === 0 && item.type"
+            :key="item.label"
             :type="item.type"
             :align="item.align"
             :selectable="(row) => item.selectable ? item.selectable(row) : true"
@@ -186,7 +181,7 @@
 
           <el-table-column
             v-else-if="!item.slot && !item.isHidden"
-            :key="index"
+            :key="item.label"
             :label="item.label"
             :prop="item.prop"
             :align="item.align"
@@ -199,7 +194,7 @@
 
           <el-table-column
             v-else-if="item.slot && item.slot !== 'action' && !item.isHidden"
-            :key="index"
+            :key="item.label"
             :label="item.label"
             :align="item.align"
             :show-overflow-tooltip="item.tooltip"
@@ -215,7 +210,7 @@
 
           <el-table-column
             v-else-if="item.slot && !item.isHidden"
-            :key="index"
+            :key="item.label"
             :label="item.label"
             :align="item.align"
             :min-width="item.minWidth"

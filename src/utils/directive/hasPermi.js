@@ -1,4 +1,4 @@
-
+// import Vue from 'vue';
 /**
  * 操作权限处理
  */
