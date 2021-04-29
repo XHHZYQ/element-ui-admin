@@ -406,7 +406,7 @@
 </template>
 
 <script>
-import { upload, form } from '../utils';
+import { upload, form } from '../../utils/mixins';
 export default {
   mixins: [form, upload],
   name: 'formComp',
