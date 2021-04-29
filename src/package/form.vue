@@ -1,409 +1,407 @@
 
 <template>
-  <div id="app">
-    <div class="form-container" :class="{'form-box': !isNest}">
-      <!--status-icon="true"-->
-      <el-form
-        :model="formModel"
-        :rules="formRules"
-        ref="form"
-        :label-width="labelWidth"
-        label-suffix=" :"
-        :show-message="showMessage"
-        :disabled="formDisabled"
-      >
-        <template v-for="(item, index) of formList">
+  <div class="form-container" :class="{'form-box': !isNest}">
+    <!--status-icon="true"-->
+    <el-form
+      :model="formModel"
+      :rules="formRules"
+      ref="form"
+      :label-width="labelWidth"
+      label-suffix=" :"
+      :show-message="showMessage"
+      :disabled="formDisabled"
+    >
+      <template v-for="(item, index) of formList">
 
-          <template v-if="item.inputType==='text'">
-            <slot v-if="item.slot" :name="item.slot" :formItem="item"></slot>
-            <el-form-item
-              v-if="!item.slot && !item.isHidden"
-              v-show="!item.unShow"
-              :label="item.label"
-              :key="index"
-            >
-              <template v-if="Array.isArray(formModel[item.model])">
-                <p v-for="(ele, i) of formModel[item.model]" :key="i">{{ele}}</p>
-              </template>
-              <span v-else>{{formModel[item.model]}}</span>
-            </el-form-item>
-          </template>
-
-          <template v-if="item.inputType==='img'">
-            <slot v-if="item.slot" :name="item.slot" :formItem="item"></slot>
-            <el-form-item
-              v-if="!item.slot && !item.isHidden"
-              v-show="!item.unShow"
-              :label="item.label"
-              :key="index"
-            >
-              <div @click="() => item.click ? item.click(item) : showImg(item)" class="img-wrapper">
-                <img :src="formModel[item.model]" alt="">
-              </div>
-            </el-form-item>
-          </template>
-
-          <!--input 输入框-->
-          <template v-if="['input', 'textarea'].some(el => el === item.inputType)">
-            <slot v-if="item.slot" :name="item.slot" :formItem="item"></slot>
-            <el-form-item
-              v-if="!item.slot && !item.isHidden"
-              v-show="!item.unShow"
-              :label="item.label"
-              :prop="item.model"
-              :key="index"
-            >
-              <!--type 属性可选为input、textarea等元素属性-->
-              <el-input
-                v-model.trim="formModel[item.model]"
-                :placeholder="item.placeholder"
-                :disabled="item.disabled"
-                @blur="e => item.blur && item.blur(e)"
-                @change="e => item.change && item.change(e)"
-                :type="item.inputType"
-                :maxlength="item.maxlength"
-                clearable
-              ></el-input>
-              <p v-if="item.extra">{{item.extra}}</p>
-            </el-form-item>
-          </template>
-
-          <!--select选择框-->
-          <template v-if="item.inputType==='select'">
-            <slot v-if="item.slot" :name="item.slot" :formItem="item"></slot>
-            <el-form-item
-              v-if="!item.slot && !item.isHidden"
-              v-show="!item.unShow"
-              :label="item.label"
-              :prop="item.model"
-              :key="index"
-            >
-              <el-select
-                @change="e => item.change && item.change(e)"
-                v-model="formModel[item.model]"
-                :multiple="item.multiple"
-                :disabled="item.disabled"
-                clearable
-                filterable
-                :placeholder="item.placeholder">
-                <el-option
-                  v-for="(ele, i) of item.options"
-                  :key="i"
-                  :label="ele.label || ele.dictLabel"
-                  :value="ele.value || ele.dictValue"
-                >
-                </el-option>
-              </el-select>
-            </el-form-item>
-          </template>
-
-          <!--级联选择框-->
-          <template v-if="item.inputType==='cascader'">
-            <slot v-if="item.slot" :name="item.slot" :formItem="item"></slot>
-            <el-form-item
-              v-if="!item.slot && !item.isHidden"
-              v-show="!item.unShow"
-              :label="item.label"
-              :prop="item.model"
-              :key="index"
-            >
-              <el-cascader
-                @change=" e => item.change && item.change(e)"
-                v-model="formModel[item.model]"
-                :options="item.options"
-                :props="cascaderProps(item.props)"
-                clearable
-                filterable
-                :filter-method="cascaderFilter"
-                :disabled="item.disabled"
-                :placeholder="item.placeholder"></el-cascader>
-            </el-form-item>
-          </template>
-
-          <!--日期选择框-->
-          <template v-if="['date', 'datetime'].some(part => part === item.inputType)">
-            <slot v-if="item.slot" :name="item.slot" :formItem="item"></slot>
-            <el-form-item
-              v-if="!item.slot && !item.isHidden"
-              v-show="!item.unShow"
-              :label="item.label"
-              :prop="item.model"
-              :key="index"
-            >
-              <!--type = date/datetime-->
-              <el-date-picker
-                @change="e => item.change && item.change(e)"
-                v-model="formModel[item.model]"
-                :type="item.inputType"
-                :placeholder="item.placeholder"
-                :disabled="item.disabled"
-                :value-format="item.valueFormat || 'yyyy-MM-dd'"
-                :picker-options="{disabledDate: date => disabledDate(date, item.disDate)}"
-                clearable
-              >
-              </el-date-picker>
-            </el-form-item>
-          </template>
-
-          <!--日期选择框-->
-          <template v-if="['datetimerange', 'daterange'].some(part => part === item.inputType)">
-            <slot v-if="item.slot" :name="item.slot" :formItem="item"></slot>
-            <el-form-item
-              v-if="!item.slot && !item.isHidden"
-              v-show="!item.unShow"
-              :label="item.label"
-              :prop="item.model"
-              :key="index"
-            >
-              <!--datetimerange/ daterange-->
-              <el-date-picker
-                @change="e => item.change && item.change(e)"
-                v-model="formModel[item.model]"
-                :type="item.inputType"
-                range-separator="-"
-                :start-placeholder="item.placeholder[0]"
-                :end-placeholder="item.placeholder[1]"
-                :disabled="item.disabled"
-                :value-format="item.valueFormat || 'yyyy-MM-dd HH:mm:ss'"
-                :picker-options="{disabledDate: date => disabledDate(date, item.disDate)}"
-                clearable
-              >
-              </el-date-picker>
-            </el-form-item>
-          </template>
-
-          <!--checkbox多选框-->
-          <template v-if="item.inputType==='checkboxGroup'">
-            <slot v-if="item.slot" :name="item.slot" :formItem="item"></slot>
-            <el-form-item
-              v-if="!item.slot && !item.isHidden"
-              v-show="!item.unShow"
-              :label="item.label"
-              :prop="item.model"
-              :key="index"
-            >
-              <el-checkbox-group
-                @change="e => item.change && item.change(e)"
-                v-model="formModel[item.model]"
-                :disabled="item.disabled"
-              >
-                <el-checkbox v-for="(el, i) of (item.options || [])" :key="i" :label="el.value">{{el.label}}</el-checkbox>
-              </el-checkbox-group>
-            </el-form-item>
-          </template>
-
-          <!--单选框组-->
-          <template v-if="item.inputType==='radioGroup'">
-            <slot v-if="item.slot" :name="item.slot" :formItem="item"></slot>
-            <el-form-item
-              v-if="!item.slot && !item.isHidden"
-              v-show="!item.unShow"
-              :label="item.label"
-              :prop="item.model"
-              :key="index"
-            >
-              <el-radio-group
-                @change="e => item.change && item.change(e)"
-                v-model="formModel[item.model]"
-                :disabled="item.disabled"
-              >
-                <el-radio v-for="(ele, i) of item.options" :key="i" :label="ele.value">{{ele.label}}</el-radio>
-              </el-radio-group>
-            </el-form-item>
-          </template>
-
-          <!--文件上传-->
-          <template v-if="item.inputType==='upload'">
-            <slot v-if="item.slot" :name="item.slot" :formItem="item"></slot>
-            <el-form-item
-              v-if="!item.slot && !item.isHidden"
-              v-show="!item.unShow"
-              :label="item.label"
-              :prop="item.model"
-              :key="index"
-            >
-              <!--show-file-list-->
-              <!-- auto-upload="item.autoUpload === undefined ? true : item.autoUpload"-->
-              <el-upload
-                action=""
-                :accept="item.accept || 'image/*'"
-                :limit="item.limit"
-                :file-list="item.fileList"
-                :on-change="(file, fileList) => fileChange(file, fileList, item)"
-                :before-upload="file => uploadBefore(file, item)"
-                :http-request="() => uploadRequest(item)"
-                :on-preview="(file) => uploadPreview(file)"
-                :on-remove="(file, fileList) => uploadRemove(file, fileList, item)"
-                :on-exceed="uploadExceed"
-                :list-type="item.listType || 'picture'"
-                :disabled="item.disabled"
-              >
-                <el-button
-                  size="mini"
-                  type="primary"
-                  plain
-                  icon="el-icon-upload"
-                  :disabled="item.disabled"
-                >{{item.text||'上传'}}</el-button>
-                <div slot="tip" class="el-upload__tip">{{item.tipTxt}}</div>
-              </el-upload>
-            </el-form-item>
-          </template>
-
-          <!--switch开关-->
-          <template v-if="item.inputType==='switch'">
-            <slot v-if="item.slot" :name="item.slot" :formItem="item"></slot>
-            <el-form-item
-              v-if="!item.slot && !item.isHidden"
-              v-show="!item.unShow"
-              :label="item.label"
-              :prop="item.model"
-              :key="index"
-            >
-
-              <el-switch
-                @change="e => item.change && item.change(e)"
-                v-model="formModel[item.model]"
-                :disabled="item.disabled"
-                :validate-event="true"
-                :active-value="1"
-                :inactive-value="0"
-              >
-              </el-switch>
-            </el-form-item>
-          </template>
-
-          <!--inputNumber 输入框-->
-          <template v-if="item.inputType==='inputNum'">
-            <slot v-if="item.slot" :name="item.slot" :formItem="item"></slot>
-            <el-form-item
-              v-if="!item.slot && !item.isHidden"
-              v-show="!item.unShow"
-              :label="item.label"
-              :prop="item.model"
-              :key="index"
-            >
-              <el-input-number
-                v-model="formModel[item.model]"
-                @change="e => item.change && item.change(e)"
-                :min="item.min"
-                :max="item.max"
-                :disabled="item.disabled"
-                :placeholder="item.placeholder"
-              >
-              </el-input-number>
-            </el-form-item>
-          </template>
-
-          <!--多个输入框-->
-          <template v-if="item.inputType==='multInput'">
-            <slot v-if="item.slot" :name="item.slot" :formItem="item"></slot>
-            <el-form-item
-              v-if="!item.slot && !item.isHidden"
-              v-show="!item.unShow"
-              :label="item.label"
-              :prop="item.model"
-              :key="index"
-            >
-              <el-row class="mult-box" type="flex" justify="space-between">
-                <template v-for="(subItem, subIndex) of item.subList">
-                  <el-col :class="{'mult-item-space': subIndex % 2 === 0 || subIndex === 0}" :span="subItem.span || 12" :key="subIndex">
-
-                    <template v-if="subItem.inputType==='text'">
-                      <slot v-if="subItem.slot" :name="subItem.slot" :formItem="subItem"></slot>
-                      <el-form-item
-                        v-if="!subItem.slot && !subItem.isHidden"
-                        :label="subItem.label"
-                      >
-                        <template v-if="Array.isArray(formModel[item.model])">
-                          <p v-for="(ele, i) of formModel[item.model]" :key="i">{{ele}}</p>
-                        </template>
-                        <span v-else="">{{formModel[item.model]}}</span>
-                      </el-form-item>
-                    </template>
-
-                    <!--input 输入框-->
-                    <template v-if="subItem.inputType==='input'">
-                      <slot v-if="subItem.slot" :name="subItem.slot" :formItem="subItem"></slot>
-                      <el-form-item
-                        :class="{ 'suffix-icon': subItem.icon }"
-                        style="display: flex; align-items: center"
-                        v-if="!subItem.slot && !subItem.isHidden"
-                        :label="subItem.label"
-                        :prop="subItem.model"
-                      >
-                        <el-input
-                          v-model.trim="formModel[subItem.model]"
-                          :placeholder="subItem.placeholder"
-                          :disabled="subItem.disabled"
-                          @blur="e => subItem.blur && subItem.blur(e)"
-                          @change="e => subItem.change && subItem.change(e)"
-                          :type="subItem.type || 'input'"
-                          clearable
-                        ></el-input>
-                        <!-- 图标-->
-                        <i v-if="subItem.icon"
-                           :class="subItem.icon"
-                           @click="() => subItem.iconClick && subItem.iconClick()"
-                           v-hasPermi="item.permi"></i>
-                      </el-form-item>
-                    </template>
-
-                    <template v-if="subItem.inputType==='btnText'">
-                      <slot v-if="subItem.slot" :name="subItem.slot" :formItem="subItem"></slot>
-                      <el-button
-                        @click="() => subItem.click && subItem.click()"
-                        v-hasPermi="item.permi"
-                        type="text"
-                        :disabled="subItem.disabled"
-                      >{{subItem.label}}</el-button>
-                    </template>
-
-                    <!--按钮 button-->
-                    <template v-if="subItem.inputType==='button'">
-                      <el-button
-                        @click="() => subItem.click && subItem.click()"
-                        :disabled="subItem.disabled"
-                        :loading="subItem.loading"
-                        v-hasPermi="subItem.permi"
-                        type="primary"
-                        plain
-                        size="small"
-                      >{{subItem.label || '点击'}}</el-button>
-                    </template>
-
-                    <template v-if="subItem.inputType==='select'">
-                      <el-form-item
-                        :label="subItem.label"
-                        :prop="subItem.model"
-                      >
-                        <el-select
-                          @change="e => subItem.change && subItem.change(e)"
-                          v-model="formModel[subItem.model]"
-                          :multiple="subItem.multiple"
-                          :disabled="subItem.disabled"
-                          clearable
-                          filterable
-                          :placeholder="subItem.placeholder">
-                          <el-option v-for="(ele, i) of subItem.options" :key="i" :label="ele.label" :value="ele.value">
-                          </el-option>
-                        </el-select>
-                      </el-form-item>
-                    </template>
-                  </el-col>
-                </template>
-              </el-row>
-            </el-form-item>
-          </template>
+        <template v-if="item.inputType==='text'">
+          <slot v-if="item.slot" :name="item.slot" :formItem="item"></slot>
+          <el-form-item
+            v-if="!item.slot && !item.isHidden"
+            v-show="!item.unShow"
+            :label="item.label"
+            :key="index"
+          >
+            <template v-if="Array.isArray(formModel[item.model])">
+              <p v-for="(ele, i) of formModel[item.model]" :key="i">{{ele}}</p>
+            </template>
+            <span v-else>{{formModel[item.model]}}</span>
+          </el-form-item>
         </template>
 
-        <slot v-if="isSubmitBtn && formList.length" name="submitBtn">
-          <el-form-item>
-            <el-button type="primary" @click="submitForm" :loading="submitLoading" size="large">确 定</el-button>
+        <template v-if="item.inputType==='img'">
+          <slot v-if="item.slot" :name="item.slot" :formItem="item"></slot>
+          <el-form-item
+            v-if="!item.slot && !item.isHidden"
+            v-show="!item.unShow"
+            :label="item.label"
+            :key="index"
+          >
+            <div @click="() => item.click ? item.click(item) : showImg(item)" class="img-wrapper">
+              <img :src="formModel[item.model]" alt="">
+            </div>
           </el-form-item>
-        </slot>
-      </el-form>
-    </div>
+        </template>
+
+        <!--input 输入框-->
+        <template v-if="['input', 'textarea'].some(el => el === item.inputType)">
+          <slot v-if="item.slot" :name="item.slot" :formItem="item"></slot>
+          <el-form-item
+            v-if="!item.slot && !item.isHidden"
+            v-show="!item.unShow"
+            :label="item.label"
+            :prop="item.model"
+            :key="index"
+          >
+            <!--type 属性可选为input、textarea等元素属性-->
+            <el-input
+              v-model.trim="formModel[item.model]"
+              :placeholder="item.placeholder"
+              :disabled="item.disabled"
+              @blur="e => item.blur && item.blur(e)"
+              @change="e => item.change && item.change(e)"
+              :type="item.inputType"
+              :maxlength="item.maxlength"
+              clearable
+            ></el-input>
+            <p v-if="item.extra">{{item.extra}}</p>
+          </el-form-item>
+        </template>
+
+        <!--select选择框-->
+        <template v-if="item.inputType==='select'">
+          <slot v-if="item.slot" :name="item.slot" :formItem="item"></slot>
+          <el-form-item
+            v-if="!item.slot && !item.isHidden"
+            v-show="!item.unShow"
+            :label="item.label"
+            :prop="item.model"
+            :key="index"
+          >
+            <el-select
+              @change="e => item.change && item.change(e)"
+              v-model="formModel[item.model]"
+              :multiple="item.multiple"
+              :disabled="item.disabled"
+              clearable
+              filterable
+              :placeholder="item.placeholder">
+              <el-option
+                v-for="(ele, i) of item.options"
+                :key="i"
+                :label="ele.label || ele.dictLabel"
+                :value="ele.value || ele.dictValue"
+              >
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </template>
+
+        <!--级联选择框-->
+        <template v-if="item.inputType==='cascader'">
+          <slot v-if="item.slot" :name="item.slot" :formItem="item"></slot>
+          <el-form-item
+            v-if="!item.slot && !item.isHidden"
+            v-show="!item.unShow"
+            :label="item.label"
+            :prop="item.model"
+            :key="index"
+          >
+            <el-cascader
+              @change=" e => item.change && item.change(e)"
+              v-model="formModel[item.model]"
+              :options="item.options"
+              :props="cascaderProps(item.props)"
+              clearable
+              filterable
+              :filter-method="cascaderFilter"
+              :disabled="item.disabled"
+              :placeholder="item.placeholder"></el-cascader>
+          </el-form-item>
+        </template>
+
+        <!--日期选择框-->
+        <template v-if="['date', 'datetime'].some(part => part === item.inputType)">
+          <slot v-if="item.slot" :name="item.slot" :formItem="item"></slot>
+          <el-form-item
+            v-if="!item.slot && !item.isHidden"
+            v-show="!item.unShow"
+            :label="item.label"
+            :prop="item.model"
+            :key="index"
+          >
+            <!--type = date/datetime-->
+            <el-date-picker
+              @change="e => item.change && item.change(e)"
+              v-model="formModel[item.model]"
+              :type="item.inputType"
+              :placeholder="item.placeholder"
+              :disabled="item.disabled"
+              :value-format="item.valueFormat || 'yyyy-MM-dd'"
+              :picker-options="{disabledDate: date => disabledDate(date, item.disDate)}"
+              clearable
+            >
+            </el-date-picker>
+          </el-form-item>
+        </template>
+
+        <!--日期选择框-->
+        <template v-if="['datetimerange', 'daterange'].some(part => part === item.inputType)">
+          <slot v-if="item.slot" :name="item.slot" :formItem="item"></slot>
+          <el-form-item
+            v-if="!item.slot && !item.isHidden"
+            v-show="!item.unShow"
+            :label="item.label"
+            :prop="item.model"
+            :key="index"
+          >
+            <!--datetimerange/ daterange-->
+            <el-date-picker
+              @change="e => item.change && item.change(e)"
+              v-model="formModel[item.model]"
+              :type="item.inputType"
+              range-separator="-"
+              :start-placeholder="item.placeholder[0]"
+              :end-placeholder="item.placeholder[1]"
+              :disabled="item.disabled"
+              :value-format="item.valueFormat || 'yyyy-MM-dd HH:mm:ss'"
+              :picker-options="{disabledDate: date => disabledDate(date, item.disDate)}"
+              clearable
+            >
+            </el-date-picker>
+          </el-form-item>
+        </template>
+
+        <!--checkbox多选框-->
+        <template v-if="item.inputType==='checkboxGroup'">
+          <slot v-if="item.slot" :name="item.slot" :formItem="item"></slot>
+          <el-form-item
+            v-if="!item.slot && !item.isHidden"
+            v-show="!item.unShow"
+            :label="item.label"
+            :prop="item.model"
+            :key="index"
+          >
+            <el-checkbox-group
+              @change="e => item.change && item.change(e)"
+              v-model="formModel[item.model]"
+              :disabled="item.disabled"
+            >
+              <el-checkbox v-for="(el, i) of (item.options || [])" :key="i" :label="el.value">{{el.label}}</el-checkbox>
+            </el-checkbox-group>
+          </el-form-item>
+        </template>
+
+        <!--单选框组-->
+        <template v-if="item.inputType==='radioGroup'">
+          <slot v-if="item.slot" :name="item.slot" :formItem="item"></slot>
+          <el-form-item
+            v-if="!item.slot && !item.isHidden"
+            v-show="!item.unShow"
+            :label="item.label"
+            :prop="item.model"
+            :key="index"
+          >
+            <el-radio-group
+              @change="e => item.change && item.change(e)"
+              v-model="formModel[item.model]"
+              :disabled="item.disabled"
+            >
+              <el-radio v-for="(ele, i) of item.options" :key="i" :label="ele.value">{{ele.label}}</el-radio>
+            </el-radio-group>
+          </el-form-item>
+        </template>
+
+        <!--文件上传-->
+        <template v-if="item.inputType==='upload'">
+          <slot v-if="item.slot" :name="item.slot" :formItem="item"></slot>
+          <el-form-item
+            v-if="!item.slot && !item.isHidden"
+            v-show="!item.unShow"
+            :label="item.label"
+            :prop="item.model"
+            :key="index"
+          >
+            <!--show-file-list-->
+            <!-- auto-upload="item.autoUpload === undefined ? true : item.autoUpload"-->
+            <el-upload
+              action=""
+              :accept="item.accept || 'image/*'"
+              :limit="item.limit"
+              :file-list="item.fileList"
+              :on-change="(file, fileList) => fileChange(file, fileList, item)"
+              :before-upload="file => uploadBefore(file, item)"
+              :http-request="() => uploadRequest(item)"
+              :on-preview="(file) => uploadPreview(file)"
+              :on-remove="(file, fileList) => uploadRemove(file, fileList, item)"
+              :on-exceed="uploadExceed"
+              :list-type="item.listType || 'picture'"
+              :disabled="item.disabled"
+            >
+              <el-button
+                size="mini"
+                type="primary"
+                plain
+                icon="el-icon-upload"
+                :disabled="item.disabled"
+              >{{item.text||'上传'}}</el-button>
+              <div slot="tip" class="el-upload__tip">{{item.tipTxt}}</div>
+            </el-upload>
+          </el-form-item>
+        </template>
+
+        <!--switch开关-->
+        <template v-if="item.inputType==='switch'">
+          <slot v-if="item.slot" :name="item.slot" :formItem="item"></slot>
+          <el-form-item
+            v-if="!item.slot && !item.isHidden"
+            v-show="!item.unShow"
+            :label="item.label"
+            :prop="item.model"
+            :key="index"
+          >
+
+            <el-switch
+              @change="e => item.change && item.change(e)"
+              v-model="formModel[item.model]"
+              :disabled="item.disabled"
+              :validate-event="true"
+              :active-value="1"
+              :inactive-value="0"
+            >
+            </el-switch>
+          </el-form-item>
+        </template>
+
+        <!--inputNumber 输入框-->
+        <template v-if="item.inputType==='inputNum'">
+          <slot v-if="item.slot" :name="item.slot" :formItem="item"></slot>
+          <el-form-item
+            v-if="!item.slot && !item.isHidden"
+            v-show="!item.unShow"
+            :label="item.label"
+            :prop="item.model"
+            :key="index"
+          >
+            <el-input-number
+              v-model="formModel[item.model]"
+              @change="e => item.change && item.change(e)"
+              :min="item.min"
+              :max="item.max"
+              :disabled="item.disabled"
+              :placeholder="item.placeholder"
+            >
+            </el-input-number>
+          </el-form-item>
+        </template>
+
+        <!--多个输入框-->
+        <template v-if="item.inputType==='multInput'">
+          <slot v-if="item.slot" :name="item.slot" :formItem="item"></slot>
+          <el-form-item
+            v-if="!item.slot && !item.isHidden"
+            v-show="!item.unShow"
+            :label="item.label"
+            :prop="item.model"
+            :key="index"
+          >
+            <el-row class="mult-box" type="flex" justify="space-between">
+              <template v-for="(subItem, subIndex) of item.subList">
+                <el-col :class="{'mult-item-space': subIndex % 2 === 0 || subIndex === 0}" :span="subItem.span || 12" :key="subIndex">
+
+                  <template v-if="subItem.inputType==='text'">
+                    <slot v-if="subItem.slot" :name="subItem.slot" :formItem="subItem"></slot>
+                    <el-form-item
+                      v-if="!subItem.slot && !subItem.isHidden"
+                      :label="subItem.label"
+                    >
+                      <template v-if="Array.isArray(formModel[item.model])">
+                        <p v-for="(ele, i) of formModel[item.model]" :key="i">{{ele}}</p>
+                      </template>
+                      <span v-else="">{{formModel[item.model]}}</span>
+                    </el-form-item>
+                  </template>
+
+                  <!--input 输入框-->
+                  <template v-if="subItem.inputType==='input'">
+                    <slot v-if="subItem.slot" :name="subItem.slot" :formItem="subItem"></slot>
+                    <el-form-item
+                      :class="{ 'suffix-icon': subItem.icon }"
+                      style="display: flex; align-items: center"
+                      v-if="!subItem.slot && !subItem.isHidden"
+                      :label="subItem.label"
+                      :prop="subItem.model"
+                    >
+                      <el-input
+                        v-model.trim="formModel[subItem.model]"
+                        :placeholder="subItem.placeholder"
+                        :disabled="subItem.disabled"
+                        @blur="e => subItem.blur && subItem.blur(e)"
+                        @change="e => subItem.change && subItem.change(e)"
+                        :type="subItem.type || 'input'"
+                        clearable
+                      ></el-input>
+                      <!-- 图标-->
+                      <i v-if="subItem.icon"
+                         :class="subItem.icon"
+                         @click="() => subItem.iconClick && subItem.iconClick()"
+                         v-hasPermi="item.permi"></i>
+                    </el-form-item>
+                  </template>
+
+                  <template v-if="subItem.inputType==='btnText'">
+                    <slot v-if="subItem.slot" :name="subItem.slot" :formItem="subItem"></slot>
+                    <el-button
+                      @click="() => subItem.click && subItem.click()"
+                      v-hasPermi="item.permi"
+                      type="text"
+                      :disabled="subItem.disabled"
+                    >{{subItem.label}}</el-button>
+                  </template>
+
+                  <!--按钮 button-->
+                  <template v-if="subItem.inputType==='button'">
+                    <el-button
+                      @click="() => subItem.click && subItem.click()"
+                      :disabled="subItem.disabled"
+                      :loading="subItem.loading"
+                      v-hasPermi="subItem.permi"
+                      type="primary"
+                      plain
+                      size="small"
+                    >{{subItem.label || '点击'}}</el-button>
+                  </template>
+
+                  <template v-if="subItem.inputType==='select'">
+                    <el-form-item
+                      :label="subItem.label"
+                      :prop="subItem.model"
+                    >
+                      <el-select
+                        @change="e => subItem.change && subItem.change(e)"
+                        v-model="formModel[subItem.model]"
+                        :multiple="subItem.multiple"
+                        :disabled="subItem.disabled"
+                        clearable
+                        filterable
+                        :placeholder="subItem.placeholder">
+                        <el-option v-for="(ele, i) of subItem.options" :key="i" :label="ele.label" :value="ele.value">
+                        </el-option>
+                      </el-select>
+                    </el-form-item>
+                  </template>
+                </el-col>
+              </template>
+            </el-row>
+          </el-form-item>
+        </template>
+      </template>
+
+      <slot v-if="isSubmitBtn && formList.length" name="submitBtn">
+        <el-form-item>
+          <el-button type="primary" @click="submitForm" :loading="submitLoading" size="large">确 定</el-button>
+        </el-form-item>
+      </slot>
+    </el-form>
   </div>
 </template>
 
@@ -498,7 +496,6 @@ export default {
   methods: {
     /** 初始化 */
     initForm () {
-      console.log('this.$route: ', this.$route);
       if (this.$route === undefined) { // 兼容没配置router
         this.$route = { query: { id: undefined } };
       }

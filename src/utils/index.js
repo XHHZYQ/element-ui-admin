@@ -1,5 +1,5 @@
 
-let upload = {
+export const upload = {
   methods: {
     /* 处理获取详情fileList */
     handleFileList (data, formList) {
@@ -16,7 +16,7 @@ let upload = {
   }
 };
 
-let form = {
+export const form = {
   methods: {
     /** 禁用之前的日期选择 */
     disabledDate (date, disDate) {
@@ -49,5 +49,3 @@ let form = {
     }
   }
 };
-
-export { upload, form }

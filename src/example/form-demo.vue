@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div class="form-demo">
     <x-form
       ref="addEdit"
       :formModel="formModel"
@@ -10,12 +10,8 @@
 </template>
 
 <script>
-import form from '../package/index';
 export default {
   name: 'form-demo',
-  components: {
-    'x-form': form
-  },
   data () {
     return {
       formModel: {

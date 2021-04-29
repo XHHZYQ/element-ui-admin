@@ -1,6 +1,8 @@
 
-let form = require('./form');
-// import form from './form';
+import form from './form';
 
-module.exports = form;
-// export default form;
+const install = Vue => {
+  Vue.component(`x-form`, form);
+}
+
+export default Object.assign({}, { form, install })
