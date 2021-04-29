@@ -639,3 +639,17 @@ export default {
     }
   }
 </style>
+
+<style>
+.el-table .el-table__header-wrapper th {
+  word-break: break-word;
+  background-color: #f8f8f9;
+  color: #515a6e;
+  height: 40px;
+  font-size: 14px;
+  font-weight: bold;
+}
+.el-table--enable-row-hover .el-table__body tr:hover>td {
+  background-color: #e6f7ff;
+}
+</style>

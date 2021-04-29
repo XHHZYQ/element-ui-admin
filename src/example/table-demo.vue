@@ -174,8 +174,17 @@ export default {
     };
   },
   created () {
+    this.getPermission();
   },
   methods: {
+    getPermission () {
+      // todo 接口请求获取权限列表
+      sessionStorage.setItem('permiList', JSON.stringify([
+        'statist:eventList:detail',
+        'statist:eventList:handle',
+        'system:user:resetPwd'
+      ]));
+    },
     /** 处理操作项 */
     handleOpera (row) {
     }
