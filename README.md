@@ -1,6 +1,6 @@
-# webpack-simple-config
+# xhh-test-pkg
 
-> A Vue.js project
+> A component base on "element-ui"
 
 ## Build Setup
 
