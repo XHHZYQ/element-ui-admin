@@ -1,5 +1,5 @@
 {
-  "name": "element-ui-admin",
+  "name": "element-ui-admin-x",
   "main": "dist/index.js",
   "description": "A form component base on element-ui",
   "version": "1.0.0",
@@ -32,6 +32,6 @@
     "vue-template-compiler": "^2.4.4",
     "webpack": "^3.6.0",
     "webpack-dev-server": "^2.9.1",
-    "element-ui-admin": "^1.0.0"
+    "element-ui-admin-x": "^1.0.0"
   }
 }
