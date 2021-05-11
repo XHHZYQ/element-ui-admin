@@ -221,21 +221,23 @@
             :prop="item.model"
             :key="index"
           >
+            <!-- multiple 是否支持同时选择多个文件-->
             <!--show-file-list-->
             <!-- auto-upload="item.autoUpload === undefined ? true : item.autoUpload"-->
             <el-upload
               action=""
               :accept="item.accept || 'image/*'"
-              :limit="item.limit"
+              :multiple="item.multiple !== undefined ? item.multiple : false"
+              :limit="item.limit !== undefined ? item.limit : 1"
               :file-list="item.fileList"
+              :list-type="item.listType || 'picture'"
+              :disabled="item.disabled"
               :on-change="(file, fileList) => fileChange(file, fileList, item)"
               :before-upload="file => uploadBefore(file, item)"
               :http-request="() => uploadRequest(item)"
-              :on-preview="(file) => uploadPreview(file)"
               :on-remove="(file, fileList) => uploadRemove(file, fileList, item)"
-              :on-exceed="uploadExceed"
-              :list-type="item.listType || 'picture'"
-              :disabled="item.disabled"
+              :on-exceed="(files, fileList) => uploadExceed(files, fileList, item)"
+              :on-preview="(file) => uploadPreview(file)"
             >
               <el-button
                 size="mini"
@@ -406,7 +408,7 @@
 </template>
 
 <script>
-import { upload, form } from '../../utils/mixins';
+import { upload, form } from '../../utils/mixins/index';
 export default {
   mixins: [form, upload],
   name: 'formComp',
@@ -656,14 +658,20 @@ export default {
      *  不能返回 false 不然不会执行自定义上传
      */
     uploadBefore (file, item) {
-      if (!this.fileTypeValidate(file, item)) {
+      if (typeof item.fileTypeValidate === 'function') {
+        if (!item.fileTypeValidate(file, item)) {
+          return false;
+        }
+      } else if (!this.fileTypeValidate(file, item)) {
         return false;
       }
-      if (!this.fileNameValidate(file)) {
+
+      if (typeof item.fileNameValidate === 'function') {
+        if (!item.fileNameValidate()) {
+          return false;
+        }
+      } else if (!this.fileNameValidate(file)) {
         return false;
-      }
-      if(!this.fileNumValidate(file, item)) {
-        return false
       }
 
       this.fileData = file;
@@ -685,7 +693,7 @@ export default {
     },
     // 文件类型判断
     fileTypeValidate (file, item) {
-      let acceptType = item.accept || 'image/*';
+      let acceptType = item.accept;
       let type = file.type.split('/')[0];
       let accept = acceptType.split('/')[0];
       if (type !== accept) {
@@ -716,7 +724,6 @@ export default {
     },
     // 文件数量判断
     fileNumValidate (file, item) {
-      // let key = item.model;
       item.fileList = item.fileList || [];
       let len = item.fileList.length;
       let limit = item.limit || 1;
@@ -746,8 +753,9 @@ export default {
       this.formModel[item.model] = undefined;
     },
     /** 文件数超出个数 */
-    uploadExceed (files, fileList) {
-      this.$message.error(`文件数不超过${fileList.length}`)
+    uploadExceed (files, fileList, item) {
+      let limit = item.limit !== undefined ? item.limit : 1;
+      this.$message.error(`文件数已超过 ${limit} 个`)
     }
   }
 };

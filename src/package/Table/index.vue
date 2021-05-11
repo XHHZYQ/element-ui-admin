@@ -4,137 +4,143 @@
     <el-form :model="formModel" ref="tableSearch">
       <el-row :gutter="24">
 
-      <el-col :span="8" v-for="(item, index) of searchList" :key="item.model" :style="{display: index < count ? 'block' : 'none'}">
+        <el-col :span="6" v-for="(item, index) of searchList" :key="item.model"
+                :style="{display: index < count ? 'block' : 'none'}">
 
-        <!--input 输入框-->
-        <template v-if="item.inputType==='input'">
-          <slot v-if="item.slot" :name="item.slot" :formItem="item"></slot>
-          <el-form-item
-            v-if="!item.slot && !item.isHidden"
-            :label="item.label"
-            :prop="item.model"
-          >
-            <!--type 属性可选为input、textarea等元素属性-->
-            <el-input
-              v-model.trim="formModel[item.model]"
-              :placeholder="item.placeholder"
-              :disabled="item.disabled"
-              @keyup.enter.native="formSearch"
-              @blur="e => item.blur && item.blur(e)"
-              @change="e => item.change && item.change(e)"
-              :type="item.type || 'input'"
-              clearable
-            ></el-input>
-          </el-form-item>
-        </template>
-
-        <!--select选择框-->
-        <template v-if="item.inputType==='select'">
-          <slot v-if="item.slot" :name="item.slot" :formItem="item"></slot>
-          <el-form-item
-            v-if="!item.slot && !item.isHidden"
-            :label="item.label"
-            :prop="item.model"
-          >
-            <el-select
-              @change="e => item.change && item.change(e)"
-              v-model="formModel[item.model]"
-              :multiple="item.multiple"
-              :disabled="item.disabled"
-              clearable
-              filterable
-              :placeholder="item.placeholder">
-              <el-option v-for="(ele, i) of item.options" :key="i" :label="ele.label" :value="ele.value"></el-option>
-            </el-select>
-          </el-form-item>
-        </template>
-
-        <!--级联选择框-->
-        <template v-if="item.inputType==='cascader'">
-          <slot v-if="item.slot" :name="item.slot" :formItem="item"></slot>
-          <el-form-item
-            v-if="!item.slot && !item.isHidden"
-            :label="item.label"
-            :prop="item.model"
-          >
-            <el-cascader
-              @change=" e => item.change && item.change(e)"
-              v-model="formModel[item.model]"
-              :options="item.options"
-              :props="cascaderProps(item.props)"
-              clearable
-              filterable
-              :filter-method="cascaderFilter"
-              :placeholder="item.placeholder"></el-cascader>
-          </el-form-item>
-        </template>
-
-        <!--日期选择框-->
-        <template v-if="['date', 'datetime'].some(part => part === item.inputType)">
-          <slot v-if="item.slot" :name="item.slot" :formItem="item"></slot>
-          <el-form-item
-            v-if="!item.slot && !item.isHidden"
-            :label="item.label"
-            :prop="item.model"
-          >
-            <!--type = date/datetime-->
-            <el-date-picker
-              @change="e => item.change && item.change(e)"
-              v-model="formModel[item.model]"
-              :type="item.inputType"
-              :placeholder="item.placeholder"
-              :disabled="item.disabled"
-              :format="item.valueFormat || 'yyyy-MM-dd'"
-              :value-format="item.valueFormat || 'yyyy-MM-dd'"
-              :picker-options="{disabledDate: date => disabledDate(date, item.disDate)}"
-              :clearable="item.clearable || true"
+          <!--input 输入框-->
+          <template v-if="item.inputType==='input'">
+            <slot v-if="item.slot" :name="item.slot" :formItem="item"></slot>
+            <el-form-item
+              v-if="!item.slot && !item.isHidden"
+              :label="item.label"
+              :prop="item.model"
             >
-            </el-date-picker>
-          </el-form-item>
-        </template>
+              <!--type 属性可选为input、textarea等元素属性-->
+              <el-input
+                v-model.trim="formModel[item.model]"
+                :placeholder="item.placeholder"
+                :disabled="item.disabled"
+                @keyup.enter.native="formSearch"
+                @blur="e => item.blur && item.blur(e)"
+                @change="e => item.change && item.change(e)"
+                :type="item.type || 'input'"
+                clearable
+              ></el-input>
+            </el-form-item>
+          </template>
 
-        <!--日期范围选择框-->
-        <template v-if="['datetimerange', 'daterange'].some(part => part === item.inputType)">
-          <slot v-if="item.slot" :name="item.slot" :formItem="item"></slot>
-          <el-form-item
-            v-if="!item.slot && !item.isHidden"
-            :label="item.label"
-            :prop="item.model"
-          >
-            <!--datetimerange/ daterange-->
-            <el-date-picker
-              @change="e => item.change && item.change(e)"
-              v-model="formModel[item.model]"
-              :type="item.inputType"
-              range-separator="-"
-              :start-placeholder="item.placeholder[0]"
-              :end-placeholder="item.placeholder[1]"
-              :disabled="item.disabled"
-              :format="item.valueFormat || 'yyyy-MM-dd'"
-              :value-format="item.valueFormat || 'yyyy-MM-dd'"
-              :picker-options="{disabledDate: date => disabledDate(date, item.disDate)}"
-              :clearable="item.clearable || true"
+          <!--select选择框-->
+          <template v-if="item.inputType==='select'">
+            <slot v-if="item.slot" :name="item.slot" :formItem="item"></slot>
+            <el-form-item
+              v-if="!item.slot && !item.isHidden"
+              :label="item.label"
+              :prop="item.model"
             >
-            </el-date-picker>
+              <el-select
+                @change="e => item.change && item.change(e)"
+                v-model="formModel[item.model]"
+                :multiple="item.multiple"
+                :disabled="item.disabled"
+                clearable
+                filterable
+                :placeholder="item.placeholder">
+                <el-option
+                  v-for="(ele, i) of item.options"
+                  :key="i"
+                  :label="ele.label || ele.dictLabel"
+                  :value="ele.value || ele.dictValue">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </template>
+
+          <!--级联选择框-->
+          <template v-if="item.inputType==='cascader'">
+            <slot v-if="item.slot" :name="item.slot" :formItem="item"></slot>
+            <el-form-item
+              v-if="!item.slot && !item.isHidden"
+              :label="item.label"
+              :prop="item.model"
+            >
+              <el-cascader
+                @change=" e => item.change && item.change(e)"
+                v-model="formModel[item.model]"
+                :options="item.options"
+                :props="cascaderProps(item.props)"
+                clearable
+                filterable
+                :filter-method="cascaderFilter"
+                :placeholder="item.placeholder"></el-cascader>
+            </el-form-item>
+          </template>
+
+          <!--日期选择框-->
+          <template v-if="['date', 'datetime'].some(part => part === item.inputType)">
+            <slot v-if="item.slot" :name="item.slot" :formItem="item"></slot>
+            <el-form-item
+              v-if="!item.slot && !item.isHidden"
+              :label="item.label"
+              :prop="item.model"
+            >
+              <!--type = date/datetime-->
+              <el-date-picker
+                @change="e => item.change && item.change(e)"
+                v-model="formModel[item.model]"
+                :type="item.inputType"
+                :placeholder="item.placeholder"
+                :disabled="item.disabled"
+                :format="item.valueFormat || 'yyyy-MM-dd'"
+                :value-format="item.valueFormat || 'yyyy-MM-dd'"
+                :picker-options="{disabledDate: date => disabledDate(date, item.disDate)}"
+                :clearable="item.clearable || true"
+              >
+              </el-date-picker>
+            </el-form-item>
+          </template>
+
+          <!--日期范围选择框-->
+          <template v-if="['datetimerange', 'daterange'].some(part => part === item.inputType)">
+            <slot v-if="item.slot" :name="item.slot" :formItem="item"></slot>
+            <el-form-item
+              v-if="!item.slot && !item.isHidden"
+              :label="item.label"
+              :prop="item.model"
+            >
+              <!--datetimerange/ daterange-->
+              <el-date-picker
+                @change="e => item.change && item.change(e)"
+                v-model="formModel[item.model]"
+                :type="item.inputType"
+                range-separator="-"
+                :start-placeholder="item.placeholder[0]"
+                :end-placeholder="item.placeholder[1]"
+                :disabled="item.disabled"
+                :format="item.valueFormat || 'yyyy-MM-dd'"
+                :value-format="item.valueFormat || 'yyyy-MM-dd'"
+                :picker-options="{disabledDate: date => disabledDate(date, item.disDate)}"
+                :clearable="item.clearable || true"
+              >
+              </el-date-picker>
+            </el-form-item>
+          </template>
+
+        </el-col>
+
+        <el-col v-if="searchList.length" :span="6">
+          <el-form-item class="search-btn">
+            <el-button type="primary" @click="formSearch">搜索</el-button>
+            <el-button @click="formReset">重置</el-button>
+            <el-link
+              v-if="searchList.length > 3"
+              @click="expand = !expand"
+              type="primary"
+              :underline="false">
+              {{expand ? '收起' : '展开'}}
+              <i :class="expand ? 'el-icon-arrow-up' : 'el-icon-arrow-down'"></i>
+            </el-link>
           </el-form-item>
-        </template>
-
-      </el-col>
-
-      <el-col v-if="searchList.length" :span="8">
-        <el-form-item class="search-btn">
-          <el-button type="primary" @click="formSearch">搜索</el-button>
-          <el-button @click="formReset">重置</el-button>
-          <el-link
-            v-if="searchList.length > 2"
-            @click="expand = !expand"
-            type="primary"
-            :underline="false">
-            {{expand ? '收起' : '展开'}}
-            <i :class="expand ? 'el-icon-arrow-up' : 'el-icon-arrow-down'"></i>
-          </el-link>
-        </el-form-item>
-      </el-col>
+        </el-col>
       </el-row>
 
     </el-form>
@@ -142,16 +148,17 @@
     <!--表格 操作项-->
     <div class="table-opt" v-if="tableOptList.length">
       <template v-for="(item, index) of tableOptList">
-      <el-button
-        :key="index"
-        v-if="!item.isHidden"
-        @click.native="btnsHandle(item)"
-        v-hasPermi="item.permi"
-        :disabled="item.disabled"
-        type="primary"
-        :loading="item.loading"
-        :icon="item.icon">{{item.label}}
-      </el-button>
+        <el-button
+          :key="index"
+          v-if="!item.isHidden"
+          @click.native="btnsHandle(item)"
+          v-hasPermi="item.permi"
+          :disabled="item.disabled"
+          type="primary"
+          :loading="item.loading"
+          :icon="item.icon">
+          {{item.label}}
+        </el-button>
       </template>
     </div>
 
@@ -162,61 +169,62 @@
         @select="tableSelect"
         @select-all="tableSelect"
         @row-click="rowClick"
+        :row-key="rowKey"
         v-loading="loading.loading"
         :data="tableData"
         tooltip-effect="dark"
-       >
+      >
 
-        <template v-for="(item, index) of columns">
-          <el-table-column
-            v-if="index === 0 && item.type"
-            :key="item.label"
-            :type="item.type"
-            :align="item.align"
-            :selectable="(row) => item.selectable ? item.selectable(row) : true"
-            :min-width="item.minWidth"
-            :width="item.width"
-          >
-          </el-table-column>
+        <slot name="table-column">
+          <template v-for="(item, index) of columns">
+            <el-table-column
+              v-if="index === 0 && item.type"
+              :type="item.type"
+              :align="item.align"
+              :selectable="(row) => item.selectable ? item.selectable(row) : true"
+              :min-width="item.minWidth"
+              :width="item.width"
+            >
+            </el-table-column>
 
-          <el-table-column
-            v-else-if="!item.slot && !item.isHidden"
-            :key="item.label"
-            :label="item.label"
-            :prop="item.prop"
-            :align="item.align"
-            :show-overflow-tooltip="item.tooltip"
-            :formatter="(row, column, cellValue) => item.formatter ? item.formatter(row, column, cellValue) : cellValue"
-            :min-width="item.minWidth"
-            :width="item.width"
-          >
-          </el-table-column>
+            <el-table-column
+              v-else-if="!item.slot && !item.isHidden"
+              :key="index"
+              :label="item.label"
+              :prop="item.prop"
+              :align="item.align"
+              :show-overflow-tooltip="item.tooltip"
+              :formatter="(row, column, cellValue) => item.formatter ? item.formatter(row, column, cellValue) : cellValue"
+              :min-width="item.minWidth"
+              :width="item.width"
+            >
+            </el-table-column>
 
-          <el-table-column
-            v-else-if="item.slot && item.slot !== 'action' && !item.isHidden"
-            :key="item.label"
-            :label="item.label"
-            :align="item.align"
-            :show-overflow-tooltip="item.tooltip"
-            :formatter="(row, column, cellValue) => item.formatter ? item.formatter(row, column, cellValue) : cellValue"
-            :min-width="item.minWidth"
-            :width="item.width"
-          >
-            <template slot-scope="{row}">
-              <slot :name="item.slot" :row="row"></slot>
-            </template>
-          </el-table-column>
+            <el-table-column
+              v-else-if="item.slot && item.slot !== 'action' && !item.isHidden"
+              :key="index"
+              :label="item.label"
+              :align="item.align"
+              :show-overflow-tooltip="item.tooltip"
+              :formatter="(row, column, cellValue) => item.formatter ? item.formatter(row, column, cellValue) : cellValue"
+              :min-width="item.minWidth"
+              :width="item.width"
+            >
+              <template slot-scope="{row}">
+                <slot :name="item.slot" :row="row"></slot>
+              </template>
+            </el-table-column>
 
 
-          <el-table-column
-            v-else-if="item.slot && !item.isHidden"
-            :key="item.label"
-            :label="item.label"
-            :align="item.align"
-            :min-width="item.minWidth"
-            :width="item.width"
-          >
-            <template slot-scope="{row}">
+            <el-table-column
+              v-else-if="item.slot && !item.isHidden"
+              :key="index"
+              :label="item.label"
+              :align="item.align"
+              :min-width="item.minWidth"
+              :width="item.width"
+            >
+              <template slot-scope="{row}">
 
               <span v-for="(ele, index) of rowOptList" :key="index">
                 <template v-if="index < rowOptLen">  <!--默认3，列表默认展示3个-->
@@ -236,22 +244,23 @@
                 </template>
               </span>
 
-            </template>
-          </el-table-column>
-        </template>
+              </template>
+            </el-table-column>
+          </template>
+        </slot>
 
       </el-table>
 
       <!--分页-->
       <div class="pagina-box">
         <el-pagination
-        @size-change="sizeChange"
-        @current-change="currentChange"
-        :current-page="paginationParam.pageNum"
-        :page-size="paginationParam.pageSize"
-        :total="paginationParam.total"
-        :page-sizes="[5, 10, 20, 30, 40]"
-        layout="total, sizes, prev, pager, next, jumper"
+          @size-change="sizeChange"
+          @current-change="currentChange"
+          :current-page="paginationParam.pageNum"
+          :page-size="paginationParam.pageSize"
+          :total="paginationParam.total"
+          :page-sizes="[5, 10, 20, 30, 40]"
+          layout="total, sizes, prev, pager, next, jumper"
         >
         </el-pagination>
       </div>
@@ -354,12 +363,20 @@ export default {
       tableData: []
     };
   },
-  watch: {},
+  watch: {
+    // formModel: {
+    //   deep: true,
+    //   handler (val) {
+    //     console.log('formModel 变了: ', val);
+    //   }
+    // }
+  },
   computed: {
     count () {
-      return this.expand ? this.searchList.length : 2;
+      return this.expand ? this.searchList.length : 3;
     }
   },
+  beforeCreate () {},
   mounted () {
     if (this.dataSource.length) {
       this.tableData = this.dataSource;
@@ -552,6 +569,8 @@ export default {
         }
       }
       this.filterParam(this.searchParams);
+      typeof this.listApi.searchHandle === 'function' && this.listApi.searchHandle();
+
       this.$emit('handleSearch', this.searchParams);
       this.getTableList();
     },
