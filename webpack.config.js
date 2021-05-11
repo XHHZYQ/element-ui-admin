@@ -1,6 +1,6 @@
 var path = require('path')
 var webpack = require('webpack')
-console.log('webpck.config env', process.env.NODE_ENV);
+console.log('webpack.config env', process.env.NODE_ENV);
 
 module.exports = {
   entry: process.env.NODE_ENV === 'development' ? './src/main.js' : './src/package/index.js', // 调试和开发的入口要区分开
