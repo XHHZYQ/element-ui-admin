@@ -10,7 +10,6 @@
     "build": "cross-env NODE_ENV=production webpack --progress --hide-modules"
   },
   "dependencies": {
-    "element-ui-admin-x": "^1.0.0",
     "vue": "^2.5.11"
   },
   "browserslist": [
@@ -26,7 +25,7 @@
     "cross-env": "^5.0.5",
     "css-loader": "^0.28.7",
     "element-ui": "^2.15.1",
-    "element-ui-admin-x": "^1.0.0",
+    "element-ui-admin-x": "^1.0.1",
     "file-loader": "^1.1.4",
     "node-sass": "^4.5.3",
     "sass-loader": "^6.0.6",

@@ -4,6 +4,7 @@
  */
 const hasPermi = {
   inserted (el, binding, vnode) {
+    console.log('inserted : ', );
     const { value } = binding;
     const all_permission = '*:*:*'; // admin 权限
 
@@ -25,4 +26,5 @@ const hasPermi = {
 
 export default function install (Vue) {
   Vue.directive('hasPermi', hasPermi);
+  console.log('调用了 hasPermi install: ', JSON.parse(sessionStorage.getItem('permiList')));
 };
