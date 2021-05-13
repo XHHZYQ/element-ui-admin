@@ -2,6 +2,7 @@ import Vue from 'vue';
 import './theme.scss';
 import form from './Form';
 import table from './Table';
+import '../utils/http';
 
 const component = {
   form,

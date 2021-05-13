@@ -178,7 +178,7 @@ export default {
   },
   methods: {
     getPermission () {
-      // todo 接口请求获取权限列表
+      // 接口请求获取权限列表
       sessionStorage.setItem('permiList', JSON.stringify([
         'statist:eventList:detail',
         'statist:eventList:handle',

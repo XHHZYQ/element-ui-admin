@@ -1,5 +1,10 @@
 
 import Vue from 'vue';
+import Cookies from 'js-cookie';
+
+export function getToken() {
+  return Cookies.get('Admin-Token')
+}
 
 /**
  * 清空搜索条件
@@ -21,6 +26,18 @@ export function resetData (selectData, excludeKey = []) {
     }
   }
   return selectData;
+}
+
+/**
+ * 获取 orgId
+ * @returns {any}
+ */
+export function getOrgId () {
+  let id = localStorage.getItem('orgId');
+  if (id === 'null') {
+    id = JSON.parse(id);
+  }
+  return id;
 }
 
 let funObj = {

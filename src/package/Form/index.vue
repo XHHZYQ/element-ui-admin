@@ -666,12 +666,12 @@ export default {
         return false;
       }
 
-      if (typeof item.fileNameValidate === 'function') {
+      if (typeof item.fileNameValidate === 'function') { // 自定义验证
         if (!item.fileNameValidate()) {
           return false;
         }
-      } else if (!this.fileNameValidate(file)) {
-        return false;
+      } else if (typeof item.fileNameValidate === true) { // 需要验证，组件内部验证
+        if (!this.fileNameValidate(file)) {return false;}
       }
 
       this.fileData = file;
@@ -721,22 +721,6 @@ export default {
       }
 
       return true;
-    },
-    // 文件数量判断
-    fileNumValidate (file, item) {
-      item.fileList = item.fileList || [];
-      let len = item.fileList.length;
-      let limit = item.limit || 1;
-      if (len < limit) {
-        item.fileList.push({
-          name: file.name,
-          url: URL.createObjectURL(file)
-        });
-        return true;
-      } else {
-        this.$message.error(`文件数不超过${limit}`)
-        return false;
-      }
     },
     /** 预览图片 */
     uploadPreview (file) {
