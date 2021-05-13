@@ -1,5 +1,4 @@
 
-import Vue from 'vue';
 import { request } from './axios';
 
 const GET = (obj) => {
@@ -46,10 +45,5 @@ const PUT = (obj) => {
     ...config
   }, obj);
 };
-
-Vue.prototype.$get = GET;
-Vue.prototype.$post = POST;
-Vue.prototype.$delete = DELETE;
-Vue.prototype.$put = PUT;
 
 export { POST, GET, DELETE, PUT };

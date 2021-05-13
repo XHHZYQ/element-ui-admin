@@ -5,6 +5,8 @@ import { Message } from 'element-ui';
 import { closeLoading, handleCode, handleTip } from './utils';
 import { getOrgId, getToken } from '../index'
 
+console.log('VUE_APP_BASE_API: ', process.env.VUE_APP_BASE_API);
+
 /** 组织账号请求参数统一添加 orgId */
 function handleOrgIdParam (config) {
   let orgId = getOrgId();
@@ -21,8 +23,14 @@ function handleOrgIdParam (config) {
   }
 }
 
+let baseUrl;
+export function setBaseUrl (url) {
+  baseUrl = url;
+}
+
 const instance = axios.create({
-  baseURL: process.env.VUE_APP_BASE_API,
+  // baseURL: process.env.VUE_APP_BASE_API,
+  baseURL: baseUrl,
   params: {},
   timeout: 1000 * 30,
   headers: {
@@ -86,7 +94,7 @@ export function request (options, obj) {
       closeLoading(spinning, loading);
       handleTip(res, localeText, 'success');
       handleCode(res, resolve, reject);
-      // console.log('request res: ', res, options.url);
+      console.log('request res: ', res, options.url);
     }).catch((err) => {
       closeLoading(spinning, loading);
       handleTip(err, localeText, 'err');
