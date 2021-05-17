@@ -3,7 +3,7 @@ import './theme.scss';
 import form from './Form';
 import table from './Table';
 import AxiosInstance from '../utils/http';
-import hasPermi from '../utils/hasPermi';
+import { hasPermi } from '../utils/hasPermi';
 
 const component = {
   form,
@@ -20,4 +20,4 @@ const install = Vue => {
 
 export { AxiosInstance };
 
-export default Object.assign({}, { install });
+export default install;

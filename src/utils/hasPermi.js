@@ -2,7 +2,7 @@
 /**
  * 操作权限处理
  */
-const hasPermi = {
+export const hasPermi = {
   inserted (el, binding, vnode) {
     const { value } = binding;
     const all_permission = '*:*:*'; // admin 权限
