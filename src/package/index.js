@@ -1,8 +1,9 @@
-import Vue from 'vue';
+
 import './theme.scss';
 import form from './Form';
 import table from './Table';
-import '../utils/http';
+import AxiosInstance from '../utils/http';
+import hasPermi from '../utils/hasPermi';
 
 const component = {
   form,
@@ -13,6 +14,10 @@ const install = Vue => {
   Object.keys(component).forEach(key => {
     Vue.component(`x-${key}`, component[key]);
   })
+
+  Vue.directive('hasPermi', hasPermi);
 };
 
-export default Object.assign({}, component, { install });
+export { AxiosInstance };
+
+export default Object.assign({}, { install });

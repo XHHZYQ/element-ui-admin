@@ -174,6 +174,9 @@ export default {
     };
   },
   created () {
+    this.Request.GET({
+      url: '/auth/captcha/getImage',
+    });
     this.getPermission();
   },
   methods: {
@@ -181,7 +184,7 @@ export default {
       // 接口请求获取权限列表
       sessionStorage.setItem('permiList', JSON.stringify([
         'statist:eventList:detail',
-        'statist:eventList:handle',
+        // 'statist:eventList:handle',
         'system:user:resetPwd'
       ]));
     },
