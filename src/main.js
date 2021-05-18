@@ -10,8 +10,6 @@ import xhhPkg from '../dist'; // 打包结果引入 dist
 // import App from './example/form-demo.vue';
 import App from './example/table-demo.vue';
 
-console.log('setBaseUrl: ', xhhPkg);
-// xhhPkg.setBaseUrl('http://192.168.1.225:9090/api');
 
 Vue.use(ElementUI);
 Vue.use(xhhPkg);

@@ -4,9 +4,6 @@ import form from './Form';
 import table from './Table';
 import hasPermi from '../utils/hasPermi';
 import { DELETE, GET, POST, PUT } from '../utils/http';
-import { setBaseUrl } from '../utils/http/axios';
-
-console.log('setBaseUrl: ', setBaseUrl);
 
 const component = {
   form,
@@ -19,11 +16,8 @@ const install = Vue => {
   })
 
   Vue.directive('hasPermi', hasPermi);
-
-  Vue.prototype.$get = GET;
-  Vue.prototype.$post = POST;
-  Vue.prototype.$delete = DELETE;
-  Vue.prototype.$put = PUT;
 };
 
-export default Object.assign({}, component, setBaseUrl, { install });
+export { GET, POST, PUT, DELETE }
+
+export default Object.assign({}, component, { install });

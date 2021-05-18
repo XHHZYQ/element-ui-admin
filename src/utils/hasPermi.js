@@ -26,5 +26,4 @@ const hasPermi = {
 
 export default function install (Vue) {
   // Vue.directive('hasPermi', hasPermi);
-  console.log('调用了 hasPermi install: ', JSON.parse(sessionStorage.getItem('permiList')));
 };

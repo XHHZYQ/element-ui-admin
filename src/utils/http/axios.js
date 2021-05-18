@@ -5,8 +5,6 @@ import { Message } from 'element-ui';
 import { closeLoading, handleCode, handleTip } from './utils';
 import { getOrgId, getToken } from '../index'
 
-console.log('VUE_APP_BASE_API: ', process.env.VUE_APP_BASE_API);
-
 /** 组织账号请求参数统一添加 orgId */
 function handleOrgIdParam (config) {
   let orgId = getOrgId();
@@ -23,14 +21,9 @@ function handleOrgIdParam (config) {
   }
 }
 
-let baseUrl;
-export function setBaseUrl (url) {
-  baseUrl = url;
-}
-
 const instance = axios.create({
   // baseURL: process.env.VUE_APP_BASE_API,
-  baseURL: baseUrl,
+  baseURL: baseUrl.baseUrl,
   params: {},
   timeout: 1000 * 30,
   headers: {
@@ -55,6 +48,7 @@ const instance = axios.create({
 
 // 请求拦截器
 instance.interceptors.request.use(config => {
+  console.log('请求拦截器 config: ', config);
     if (getToken()) {
       config.headers['Authorization'] = 'Bearer ' + getToken(); // 让每个请求携带自定义token 请根据实际情况自行修改
     }

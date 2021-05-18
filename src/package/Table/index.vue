@@ -4,7 +4,7 @@
     <el-form :model="formModel" ref="tableSearch">
       <el-row :gutter="24">
 
-        <el-col :span="6" v-for="(item, index) of searchList" :key="item.model"
+        <el-col :span="8" v-for="(item, index) of searchList" :key="item.model"
                 :style="{display: index < count ? 'block' : 'none'}">
 
           <!--input 输入框-->
@@ -127,13 +127,13 @@
 
         </el-col>
 
-        <el-col v-if="searchList.length" :span="6">
+        <el-col v-if="searchList.length" :span="btnSpan">
           <el-form-item class="search-btn">
             <el-button type="primary" @click="formSearch">搜索</el-button>
             <el-button @click="formReset">重置</el-button>
             <el-link
-              v-if="searchList.length > 3"
-              @click="expand = !expand"
+              v-if="searchList.length > 2"
+              @click="triggerExpand"
               type="primary"
               :underline="false">
               {{expand ? '收起' : '展开'}}
@@ -297,7 +297,7 @@ export default {
     },
     rowOptLen: {
       type: Number,
-      default: () => 3
+      default: () => 2
     },
     queryParam: {
       type: Object,
@@ -349,6 +349,7 @@ export default {
   },
   data () {
     return {
+      btnSpan: 8,
       selectionIds: [],
       selectionRows: [],
       clickRows: [],
@@ -373,7 +374,7 @@ export default {
   },
   computed: {
     count () {
-      return this.expand ? this.searchList.length : 3;
+      return this.expand ? this.searchList.length : 2;
     }
   },
   beforeCreate () {},
@@ -385,6 +386,17 @@ export default {
     this.listApi.url && this.getTableList();
   },
   methods: {
+    triggerExpand () {
+      this.expand = !this.expand;
+      if (this.expand) {
+        let result = this.searchList.length % 3;
+        let spanObj = { '0': 24, '1': 16, '2': 8 };
+        this.btnSpan = spanObj[result];
+        console.log('result: ', result, this.btnSpan);
+      } else {
+        this.btnSpan = 8;
+      }
+    },
     /** 设置表单 */
     setForm (model, value) {
       this.formModel[model] = value;
