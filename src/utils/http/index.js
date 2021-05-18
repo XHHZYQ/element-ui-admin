@@ -1,9 +1,16 @@
 
 import { request } from './axios';
 
-const GET = (obj) => {
-  let {url, params, config} = obj;
+function AxiosInstance (obj) {
+  this.config = obj;
+}
+
+AxiosInstance.prototype.GET = function (obj) {
+  let { url, params, config } = obj;
   config = config || {};
+  config = {...config, ...this.config};
+  console.log('instance url: ', this.config, url);
+
   return request({
     method: 'get',
     url,
@@ -12,9 +19,11 @@ const GET = (obj) => {
   }, obj);
 };
 
-const POST = obj => {
-  let {url, params, config, query} = obj;
+AxiosInstance.prototype.POST = function (obj) {
+  let { url, params, config, query } = obj;
   config = config || {};
+  config = {...config, ...this.config};
+
   return request({
     method: 'post',
     url,
@@ -24,9 +33,11 @@ const POST = obj => {
   }, obj);
 };
 
-const DELETE = obj => {
-  let {url, params, config} = obj;
+AxiosInstance.prototype.DELETE = function (obj) {
+  let { url, params, config } = obj;
   config = config || {};
+  config = {...config, ...this.config};
+
   return request({
     method: 'delete',
     url,
@@ -35,9 +46,11 @@ const DELETE = obj => {
   }, obj);
 };
 
-const PUT = (obj) => {
-  let {url, params, config} = obj;
+AxiosInstance.prototype.PUT = function (obj) {
+  let { url, params, config } = obj;
   config = config || {};
+  config = {...config, ...this.config};
+
   return request({
     method: 'put',
     url,
@@ -46,4 +59,4 @@ const PUT = (obj) => {
   }, obj);
 };
 
-export { POST, GET, DELETE, PUT };
+export default AxiosInstance;

@@ -1,9 +1,9 @@
-import Vue from 'vue';
+
 import './theme.scss';
 import form from './Form';
 import table from './Table';
-import hasPermi from '../utils/hasPermi';
-import { DELETE, GET, POST, PUT } from '../utils/http';
+import AxiosInstance from '../utils/http';
+import { hasPermi } from '../utils/hasPermi';
 
 const component = {
   form,
@@ -18,6 +18,6 @@ const install = Vue => {
   Vue.directive('hasPermi', hasPermi);
 };
 
-export { GET, POST, PUT, DELETE }
+export { AxiosInstance };
 
-export default Object.assign({}, component, { install });
+export default install;

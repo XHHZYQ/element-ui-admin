@@ -105,5 +105,3 @@ export function request (options, obj) {
     });
   });
 }
-
-// Vue.prototype.$request = request;
