@@ -7,7 +7,7 @@ module.exports = {
     path: path.resolve(__dirname, './dist'),
     publicPath: '/dist/',
     filename: 'index.js',
-    library: 'xhh-test-pkg',
+    library: 'element-ui-admin-x',
     libraryTarget: 'umd'
   },
   module: {
@@ -77,7 +77,8 @@ module.exports = {
   },
   resolve: {
     alias: {
-      'vue$': 'vue/dist/vue.esm.js'
+      'vue$': 'vue/dist/vue.esm.js',
+      '@': path.join(__dirname, './src')
     },
     extensions: ['*', '.js', '.vue', '.json']
   },

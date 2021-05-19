@@ -30,6 +30,8 @@ export default {
       default: () => ({})
     }
   },
+  created () {
+  },
   methods: {
     /* 操作按钮禁用判断 */
     optAble (row, item) {

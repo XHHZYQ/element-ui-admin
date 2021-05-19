@@ -270,8 +270,8 @@
 </template>
 
 <script>
-import { form } from '../../utils/mixins';
-import { resetData } from '../../utils';
+import { form } from '@/utils/mixins';
+import { resetData } from '@/utils';
 import rowButton from './rowButton';
 export default {
   mixins: [form],
@@ -298,7 +298,7 @@ export default {
     },
     rowOptLen: {
       type: Number,
-      default: () => 2
+      default: () => 3
     },
     queryParam: {
       type: Object,
@@ -395,7 +395,6 @@ export default {
         let result = this.searchList.length % 3;
         let spanObj = { '0': 24, '1': 16, '2': 8 };
         this.searchSpan = spanObj[result];
-        console.log('this.searchSpan: ', this.searchSpan);
       } else {
         this.searchSpan = 8;
       }

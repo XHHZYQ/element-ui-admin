@@ -183,7 +183,6 @@ export default {
     testBind () {
       let obj = {url: 'http://a/b/c'}
       function get () {
-        console.log('this: ', this);
       }
       let newFn = get.bind(obj);
       newFn();
