@@ -12,6 +12,8 @@
       :columns="columns"
       :dataSource="tableData">
     </x-table>
+
+    <el-button @click="getList">test bind</el-button>
   </div>
 </template>
 
@@ -31,6 +33,7 @@ export default {
       },
       searchList: [
         { model: 'productId', placeholder: '产品', options: [], inputType: 'select' },
+        { model: 'deviceId', placeholder: '设备', options: [], inputType: 'select' },
         { model: 'deviceCode', placeholder: '设备编号', options: [], inputType: 'input' },
         { model: 'eventType', placeholder: '事件类型', options: [], inputType: 'select' },
         { model: 'reportTime', placeholder: ['上报时间', '上报时间'], options: [], inputType: 'daterange', target: ['reportBeginTime', 'reportEndTime'] },
@@ -174,12 +177,27 @@ export default {
     };
   },
   created () {
-    this.Request.GET({
-      url: '/auth/captcha/getImage',
-    });
     this.getPermission();
   },
   methods: {
+    testBind () {
+      let obj = {url: 'http://a/b/c'}
+      function get () {
+        console.log('this: ', this);
+      }
+      let newFn = get.bind(obj);
+      newFn();
+    },
+    getList () {
+      this.$get({
+        url: '/iot/product/product/list',
+        params: {},
+        config: {
+          headers: { Authorization: 'Bearer ed5b419d-82e8-42fa-a83c-60f3febc6977' }
+        }
+      }).then(({ data }) => {
+      });
+    },
     getPermission () {
       // 接口请求获取权限列表
       sessionStorage.setItem('permiList', JSON.stringify([

@@ -22,8 +22,7 @@ function handleOrgIdParam (config) {
 }
 
 const instance = axios.create({
-  // baseURL: process.env.VUE_APP_BASE_API,
-  baseURL: baseUrl.baseUrl,
+  baseURL: undefined,
   params: {},
   timeout: 1000 * 30,
   headers: {
@@ -48,7 +47,6 @@ const instance = axios.create({
 
 // 请求拦截器
 instance.interceptors.request.use(config => {
-  console.log('请求拦截器 config: ', config);
     if (getToken()) {
       config.headers['Authorization'] = 'Bearer ' + getToken(); // 让每个请求携带自定义token 请根据实际情况自行修改
     }
@@ -101,7 +99,7 @@ export function request (options, obj) {
       } else {
         Message.error('网络不给力，请刷新重试');
       }
-      // console.log('request err: ', err, options.url);
+      console.log('request err: ', err, options.url);
     });
   });
 }

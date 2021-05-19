@@ -127,7 +127,8 @@
 
         </el-col>
 
-        <el-col v-if="searchList.length" :span="btnSpan">
+<!--        <el-col v-if="searchList.length" :class="{'space-right': spaceRight}" :span="searchSpan">-->
+        <el-col v-if="searchList.length" :class="{'space-right': expand}" :span="expand ? 24 : 8">
           <el-form-item class="search-btn">
             <el-button type="primary" @click="formSearch">搜索</el-button>
             <el-button @click="formReset">重置</el-button>
@@ -349,7 +350,7 @@ export default {
   },
   data () {
     return {
-      btnSpan: 8,
+      searchSpan: 8,
       selectionIds: [],
       selectionRows: [],
       clickRows: [],
@@ -375,9 +376,11 @@ export default {
   computed: {
     count () {
       return this.expand ? this.searchList.length : 2;
+    },
+    spaceRight () {
+      return this.expand && (this.searchList.length % 3 !== 2);
     }
   },
-  beforeCreate () {},
   mounted () {
     if (this.dataSource.length) {
       this.tableData = this.dataSource;
@@ -391,10 +394,10 @@ export default {
       if (this.expand) {
         let result = this.searchList.length % 3;
         let spanObj = { '0': 24, '1': 16, '2': 8 };
-        this.btnSpan = spanObj[result];
-        console.log('result: ', result, this.btnSpan);
+        this.searchSpan = spanObj[result];
+        console.log('this.searchSpan: ', this.searchSpan);
       } else {
-        this.btnSpan = 8;
+        this.searchSpan = 8;
       }
     },
     /** 设置表单 */
@@ -666,7 +669,7 @@ export default {
   }
 </style>
 
-<style>
+<style lang="scss">
 .el-table .el-table__header-wrapper th {
   word-break: break-word;
   background-color: #f8f8f9;
@@ -677,5 +680,11 @@ export default {
 }
 .el-table--enable-row-hover .el-table__body tr:hover>td {
   background-color: #e6f7ff;
+}
+
+.space-right {
+  .el-form-item__content {
+    text-align: right;
+  }
 }
 </style>

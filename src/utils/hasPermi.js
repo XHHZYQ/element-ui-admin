@@ -10,7 +10,6 @@ export const hasPermi = {
     if (value && value instanceof Array && value.length > 0) {
       const permissionFlag = value;
       const permissions = JSON.parse(sessionStorage.getItem('permiList')) || []; // 角色权限列表存储在 sessionStorage 中
-      console.log('permissions: ', permissions);
       const hasPermissions = permissions.some(permission => {
         return all_permission === permission || permissionFlag.includes(permission);
       });

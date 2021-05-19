@@ -29,7 +29,6 @@ export const form = {
     },
     /** 级联搜索方法 */
     cascaderFilter (node, keyword) {
-      console.log('cascaderFilter: ', keyword, node.pathLabels);
       return node.pathLabels.some( el => el.includes(keyword));
     },
     /** 级联 props 配置 */

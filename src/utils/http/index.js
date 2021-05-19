@@ -1,15 +1,10 @@
 
 import { request } from './axios';
 
-function AxiosInstance (obj) {
-  this.config = obj;
-}
-
-AxiosInstance.prototype.GET = function (obj) {
+export function GET (obj) {
   let { url, params, config } = obj;
   config = config || {};
-  config = {...config, ...this.config};
-  console.log('instance url: ', this.config, url);
+  config = {...config, ...this};
 
   return request({
     method: 'get',
@@ -17,12 +12,12 @@ AxiosInstance.prototype.GET = function (obj) {
     params,
     ...config
   }, obj);
-};
+}
 
-AxiosInstance.prototype.POST = function (obj) {
+export function POST (obj) {
   let { url, params, config, query } = obj;
   config = config || {};
-  config = {...config, ...this.config};
+  config = {...config, ...this};
 
   return request({
     method: 'post',
@@ -31,12 +26,12 @@ AxiosInstance.prototype.POST = function (obj) {
     data: params, // data 只适用于这些请求方法 'PUT', 'POST', 和 'PATCH'
     ...config
   }, obj);
-};
+}
 
-AxiosInstance.prototype.DELETE = function (obj) {
+export function DELETE (obj) {
   let { url, params, config } = obj;
   config = config || {};
-  config = {...config, ...this.config};
+  config = {...config, ...this};
 
   return request({
     method: 'delete',
@@ -44,12 +39,12 @@ AxiosInstance.prototype.DELETE = function (obj) {
     params, // DELTE 参数放在路由 query
     ...config
   }, obj);
-};
+}
 
-AxiosInstance.prototype.PUT = function (obj) {
+export function PUT (obj) {
   let { url, params, config } = obj;
   config = config || {};
-  config = {...config, ...this.config};
+  config = {...config, ...this};
 
   return request({
     method: 'put',
@@ -57,6 +52,5 @@ AxiosInstance.prototype.PUT = function (obj) {
     data: params, // data 只适用于这些请求方法 'PUT', 'POST', 和 'PATCH'
     ...config
   }, obj);
-};
+}
 
-export default AxiosInstance;
