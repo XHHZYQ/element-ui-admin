@@ -86,7 +86,7 @@ export function request (options, obj) {
       closeLoading(spinning, loading);
       handleTip(res, localeText, 'success');
       handleCode(res, resolve, reject);
-      // console.log('request res: ', res, options.url);
+      console.log('request res: ', options.url, options.baseURL);
     }).catch((err) => {
       closeLoading(spinning, loading);
       handleTip(err, localeText, 'err');
@@ -99,7 +99,7 @@ export function request (options, obj) {
       } else {
         Message.error('网络不给力，请刷新重试');
       }
-      // console.log('request err: ', err, options.url);
+      console.log('request err: ', options.url, options.baseURL);
     });
   });
 }

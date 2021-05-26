@@ -2,9 +2,10 @@ import Vue from 'vue';
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 
-import xhhPkg, { GET, POST, DELETE, PUT } from '../dist'; // 打包结果引入 dist
+import xhhPkg, { GET, POST, DELETE, PUT } from './dist'; // 打包结果引入 dist
 // import xhhPkg, { GET, POST, DELETE, PUT }  from 'element-ui-admin-x'; // npm包引入
 // import xhhPkg, { GET, POST, DELETE, PUT }  from '@/package'; // 直接引入
+console.log('xhhPkg: ', xhhPkg);
 
 // import App from './example/form-demo.vue';
 import App from '@/example/table-demo.vue';
