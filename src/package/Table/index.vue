@@ -270,8 +270,8 @@
 </template>
 
 <script>
-import { form } from '@/utils/mixins';
-import { resetData } from '@/utils';
+import { form } from '@/util/mixins';
+import { resetData } from '@/util';
 import rowButton from './rowButton';
 export default {
   mixins: [form],

@@ -13,17 +13,30 @@
       :dataSource="tableData">
     </x-table>
 
-    <el-button @click="getList">test bind</el-button>
+    <el-button @click="clearForm">清空</el-button>
   </div>
 </template>
 
 <script>
+let productList = [
+  { label: '产品1', value: '1' },
+  { label: '产品2', value: '2' },
+  { label: '产品3', value: '3' },
+  { label: '产品4', value: '4' },
+];
+let deviceList = [
+  { label: '设备1', value: '1' },
+  { label: '设备2', value: '2' },
+  { label: '设备3', value: '3' },
+  { label: '设备4', value: '4' }
+]
 export default {
   name: 'table-demo',
   data () {
     return {
       searchParams: {
         productId: undefined,
+        deviceId: undefined,
         deviceCode: undefined,
         eventType: undefined,
         reportBeginTime: undefined,
@@ -32,8 +45,8 @@ export default {
         handleEndTime: undefined
       },
       searchList: [
-        { model: 'productId', placeholder: '产品', options: [], inputType: 'select' },
-        { model: 'deviceId', placeholder: '设备', options: [], inputType: 'select' },
+        { model: 'productId', placeholder: '产品', options: productList, inputType: 'select' },
+        { model: 'deviceId', placeholder: '设备', options: deviceList, inputType: 'select' },
         { model: 'deviceCode', placeholder: '设备编号', options: [], inputType: 'input' },
         { model: 'eventType', placeholder: '事件类型', options: [], inputType: 'select' },
         { model: 'reportTime', placeholder: ['上报时间', '上报时间'], options: [], inputType: 'daterange', target: ['reportBeginTime', 'reportEndTime'] },
@@ -180,12 +193,9 @@ export default {
     this.getPermission();
   },
   methods: {
-    testBind () {
-      let obj = {url: 'http://a/b/c'}
-      function get () {
-      }
-      let newFn = get.bind(obj);
-      newFn();
+    clearForm () {
+      this.$refs.table.setForm('deviceId', undefined);
+      // this.formModel.deviceId = undefined;
     },
     getList () {
       this.$get({

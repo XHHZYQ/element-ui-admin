@@ -2,8 +2,8 @@
 import './theme.scss';
 import form from './Form';
 import table from './Table';
-import { GET, POST, DELETE, PUT } from '@/utils/http';
-import { hasPermi } from '@/utils/hasPermi';
+import { GET, POST, DELETE, PUT } from '@/util/http';
+import { hasPermi } from '@/util/hasPermi';
 
 const component = {
   form,
