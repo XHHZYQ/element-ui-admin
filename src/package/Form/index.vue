@@ -223,7 +223,7 @@
           >
             <!-- multiple 是否支持同时选择多个文件-->
             <!--show-file-list-->
-            <!-- auto-upload="item.autoUpload === undefined ? true : item.autoUpload"-->
+            <!-- item.accept || 'image/*' 选择时有过滤作用-->
             <el-upload
               action=""
               :accept="item.accept || 'image/*'"
@@ -408,7 +408,7 @@
 </template>
 
 <script>
-import { upload, form } from '@/util/mixins/index';
+import { upload, form } from '../../util/mixins/index';
 export default {
   mixins: [form, upload],
   name: 'formComp',
@@ -659,19 +659,15 @@ export default {
      */
     uploadBefore (file, item) {
       if (typeof item.fileTypeValidate === 'function') {
-        if (!item.fileTypeValidate(file, item)) {
-          return false;
-        }
+        if (!item.fileTypeValidate(file, item)) { return false; }
       } else if (!this.fileTypeValidate(file, item)) {
         return false;
       }
 
       if (typeof item.fileNameValidate === 'function') { // 自定义验证
-        if (!item.fileNameValidate()) {
-          return false;
-        }
-      } else if (typeof item.fileNameValidate === true) { // 需要验证，组件内部验证
-        if (!this.fileNameValidate(file)) {return false;}
+        if (!item.fileNameValidate()) { return false; }
+      } else if (typeof item.fileNameValidate === true) { // fileNameValidate 属性为 ture 表示需要文件名称验证，自动调用组件内部验证方法
+        if (!this.fileNameValidate(file)) { return false; }
       }
 
       this.fileData = file;
@@ -694,17 +690,36 @@ export default {
     // 文件类型判断
     fileTypeValidate (file, item) {
       let acceptType = item.accept;
-      let type = file.type.split('/')[0];
-      let accept = acceptType.split('/')[0];
-      if (type !== accept) {
-        let fileTypeObj = {
-          image: '图片',
-          video: '视频',
-          file: '文件'
-        };
-        let txt = fileTypeObj[accept] ? `文件格式必须为${fileTypeObj[accept]}` : '文件格式不对';
-        this.$message.error(txt);
-        return false;
+      if (!acceptType) { // 如果没有设置accept属性
+        acceptType = 'image/*';
+        let type = file.type.split('/')[0];
+        let accept = acceptType.split('/')[0];
+        console.log('没有文件类型 file.type, accept: ', file.type, accept);
+        if (type !== accept) {
+          let fileTypeObj = {
+            image: '图片',
+            video: '视频',
+            file: '文件'
+          };
+          let txt = fileTypeObj[accept] ? `文件格式必须为${fileTypeObj[accept]}` : '文件格式不对';
+          this.$message.error(txt);
+          return false;
+        }
+      } else {
+        let arr = file.name.split('.');
+        let suffix = arr[arr.length - 1];
+        console.log('有文件类型 acceptType, suffix: ', acceptType, suffix);
+        if (!acceptType.includes(',')) {
+          if (acceptType !== suffix) {
+            this.$message.error('文件格式不对');
+            return false;
+          }
+        } else {
+          if (!acceptType.includes(suffix)) {
+            this.$message.error('文件格式不对');
+            return false;
+          }
+        }
       }
 
       return true;
