@@ -316,10 +316,10 @@
                       v-if="!subItem.slot && !subItem.isHidden"
                       :label="subItem.label"
                     >
-                      <template v-if="Array.isArray(formModel[item.model])">
-                        <p v-for="(ele, i) of formModel[item.model]" :key="i">{{ele}}</p>
+                      <template v-if="Array.isArray(formModel[subItem.model])">
+                        <p v-for="(ele, i) of formModel[subItem.model]" :key="i">{{ele}}</p>
                       </template>
-                      <span v-else="">{{formModel[item.model]}}</span>
+                      <span v-else>{{formModel[subItem.model]}}</span>
                     </el-form-item>
                   </template>
 
@@ -346,7 +346,7 @@
                       <i v-if="subItem.icon"
                          :class="subItem.icon"
                          @click="() => subItem.iconClick && subItem.iconClick()"
-                         v-hasPermi="item.permi"></i>
+                         v-hasPermi="subItem.permi"></i>
                     </el-form-item>
                   </template>
 
@@ -354,7 +354,7 @@
                     <slot v-if="subItem.slot" :name="subItem.slot" :formItem="subItem"></slot>
                     <el-button
                       @click="() => subItem.click && subItem.click()"
-                      v-hasPermi="item.permi"
+                      v-hasPermi="subItem.permi"
                       type="text"
                       :disabled="subItem.disabled"
                     >{{subItem.label}}</el-button>
@@ -778,6 +778,24 @@ export default {
   img {
     width: 100%;
     height: auto;
+  }
+}
+
+// form表单嵌套输入框
+.mult-box {
+  //margin-top: 14px;
+  .mult-item-space {
+    margin-right: 10px;
+  }
+
+  .suffix-icon {
+    position: relative;
+    .icon {
+      position: absolute;
+      top: 7px;
+      right: -30px;
+      font-size: 22px;
+    }
   }
 }
 </style>
